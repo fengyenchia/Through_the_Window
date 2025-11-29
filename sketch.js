@@ -53,6 +53,7 @@ let umbrella4_posX, umbrella4_posY;
 
 let stars = [];
 let moonX, moonY;
+let moonPos;
 let bgRectHeight;
 let mountainNoise = 0.001;
 
@@ -97,6 +98,7 @@ async function setup() {
 	// 月亮 width * 0.8, height * 0.18(原本)
 	moonX = random(width * 0.2, width * 0.8);
 	moonY = random(height * 0.16, height * 0.2);
+	moonPos = random(0, -PI);
 
 	// 山
 	mountainNoise = random(0.001, 0.003);
@@ -108,7 +110,7 @@ async function setup() {
 function draw() {
 	background(255);
 	// 背景
-	// bgRectHeight = map(sin(frameCount/10), 0,1, 9.8, 10.4);
+	bgRectHeight = map(sin(frameCount/40), 0,1, 9.8, 10.4);
 	myBackground(color(227, 41, 45), color(223, 54, 5), bgRectHeight)
     
 	// 星星
@@ -116,7 +118,8 @@ function draw() {
 
 	// 月亮
 	push()
-	myMoon(moonX, moonY);
+	// myMoon(moonX, moonY);
+	myMoon(moonPos);
 	pop()
 
 	// 山
@@ -228,15 +231,43 @@ function mySVG(str, ratio_1 = 0.02, ratio_2 = 0.05, ratio_3 = 0.05, is_last = fa
 }
 
 // --------------------------------
-function myMoon(posX=width * 0.8, posY=height * 0.18) {
+// // function myMoon(posX=width * 0.8, posY=height * 0.18) {
+// function myMoon(posX=width * 0.2, posY= -height * 0.18) {
+// 	push()
+// 	translate(width/2, height/2);
+//     noStroke();
+//     for (let i = 1; i <= 3; i++) {
+//         fill(54, 10, 100, 10);
+//         circle(posX, posY, 80 + i * 80 + sin(millis()/300));
+//     }
+//     fill(50, 10, 100, 240);
+//     circle(posX, posY, 80);
+// 	rotate(sin(frameCount/50)*0.05)
+// 	pop()
+// }
+function myMoon(pos) {
+    push();
+    translate(width/2, height/2);
     noStroke();
+
+    let radius = height * 0.3;      // 圓半徑（軌道大小）
+    let arcAngle = PI*2;           // 擺動範圍（越大越左右移動）
+    let speed = -millis() * 0.00002;   // 速度
+    let angle = speed* arcAngle;
+
+	let x = cos(pos + angle) * radius;
+	let y = sin(pos + angle) * radius;
+
     for (let i = 1; i <= 3; i++) {
         fill(54, 10, 100, 10);
-        circle(posX, posY, 80 + i * 80 + sin(millis()/300));
+        circle(x, y, 80 + i * 80 + sin(millis()/300));
     }
     fill(50, 10, 100, 240);
-    circle(posX, posY, 80);
+    circle(x, y, 80);
+
+    pop();
 }
+
 
 // ----------------------------------------------
 function umbrella_3(str1, str2, str3, color1) {
@@ -330,8 +361,9 @@ function people(posX, posY, peopleStyle, peopleScale = 15) {
 	noStroke();
 	fill(20);
 	scale(peopleScale);
+	let circlePosition = 2.8 + (sin(frameCount/10)+1)*0.4;
 	if (peopleStyle == 1) {
-		circle(posX + random(2.8, 3.2), posY - 3, 6);
+		circle(posX + circlePosition, posY - 3, 6);
 		let r = random(19, 20);
 		quad(posX + 1, posY, posX + 5, posY, posX + random(8,9), posY + r, posX - random(1,2), posY + r);
 		rect(posX + 1, posY + 19 - 2, 2, 14, 5);
@@ -339,13 +371,12 @@ function people(posX, posY, peopleStyle, peopleScale = 15) {
 		let t = random(0, 1);
 		quad(posX, posY + 0.2, posX + 1, posY + 0.2, posX + 1.5, posY + 8 + t, posX - 4, posY + 12 + t);
 		quad(posX + 5, posY + 0.2, posX + 5 + 0.8, posY + 0.2, posX + 5 + 5.5, posY + 12, posX + 5, posY + 8);
-		// quad(posX+20, posY+28, posX+20, posY+35, posX-10, posY+32, posX-10, posY+28)
 		push()
 		rotate(sin(frameCount/20)*0.1)
 		mySki(posX, posY + 32);
 		pop()
 	} else if(peopleStyle == 2) {
-		circle(posX + random(2.8, 3.2), posY - 3, 6);
+		circle(posX + circlePosition, posY - 3, 6);
 		let r = random(14, 14.2);
 		rect(posX + 0.5, posY, 7, r, 10);
 		rect(posX + 1, posY + 12, 2, 14);
@@ -354,7 +385,6 @@ function people(posX, posY, peopleStyle, peopleScale = 15) {
 		let t = random(11, 12);
 		quad(posX + 1.5, posY + 1, posX + 3, posY + 2.5, posX - 2.5, posY + 1 + t, posX - 4, posY - 0.5 + t);
 		quad(posX + 6.5, posY + 1, posX + 5, posY + 2.5, posX + 9, posY + 1 + t, posX + 11.5, posY + 0.5 + t);
-		// quad(posX+20, posY+25, posX+20, posY+32, posX-10, posY+29, posX-10, posY+25)
 		push()
 		rotate(cos(frameCount/20)*0.1)
 		mySki(posX, posY + 28);
@@ -403,29 +433,31 @@ function myMountain(mountainNoise = 0.001) {
 
 // ----------------------------------------------
 function myFrame() {
-	drawingContext.shadowColor = color(20);
-	drawingContext.shadowOffsetX = 0;
-	drawingContext.shadowOffsetY = 0;
 	noFill();
 	stroke(mainHue, 40, 95);
-	strokeWeight(50);
+	drawingContext.shadowOffsetX = 0;
+	drawingContext.shadowOffsetY = 0;
+
+	drawingContext.shadowColor = color(20);
 	drawingContext.shadowBlur = 20;
+	strokeWeight(50);
 	rect(40, 40, 720, 460);
 	rect(40, 500, 720, 460);
-	strokeWeight(80);
+	
 	drawingContext.shadowBlur = 20;
+	strokeWeight(80);
 	rect(0, 0, 800, 1000);
 
 	// 積雪
 	drawingContext.shadowColor = color(255);
 	drawingContext.shadowBlur = 0;
-	fill(100);
+	fill(92);
 	noStroke();
 	beginShape()
 	vertex(width - 65, 475);
 	vertex(65, 475);
 	for (let x = 65; x <= width - 65; x+=5) {
-			let y = 475 - 40 * noise(x/20)+sin(frameCount/10)*10;
+			let y = 460 - 45 * noise(x/20)+sin(frameCount/15)*10;
 			vertex(x, y);
 	}
 	endShape(CLOSE);
@@ -434,7 +466,7 @@ function myFrame() {
 	vertex(width - 65, 935);
 	vertex(65, 935);
 	for (let x = 65; x <= width - 65; x+=5) {
-			let y = 935 - 40 * noise(x/200)+sin(frameCount/10)*10;
+			let y = 925 - 40 * noise(x/200)+sin(frameCount/20)*10;
 			vertex(x, y);
 	}
 	endShape(CLOSE);	
