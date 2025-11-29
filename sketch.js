@@ -150,8 +150,8 @@ function draw() {
 	changeX = 50*sin(frameCount/30);
 	changeY = 50*sin(frameCount/30);
 	translate(umbrella3_posX + changeX, umbrella3_posY + changeY);
-	scale(0.3);
 	rotate(-0.2);
+	scale(0.32);
 	umbrella_3(str1, str2, str3, color1);
 	pop();
 	
@@ -165,7 +165,7 @@ function draw() {
 	changeY = 10*cos(frameCount/10);
 	translate(umbrella4_posX + changeX, umbrella4_posY + changeY);
 	rotate(0.4);
-	scale(0.3);
+	scale(0.32);
 	umbrella_4(str9, str10, str11, str12, color3);
 	pop();
 
@@ -179,8 +179,8 @@ function draw() {
 	changeX = 15*cos(frameCount/25);
 	changeY = 15*cos(frameCount/25);
 	translate(umbrella5_posX + changeX, umbrella5_posY + changeY);
-	scale(0.3);
 	rotate(0.4);
+	scale(0.32);
 	umbrella_5(str4, str5, str6, str7, str8, color2);
 	pop();
 
@@ -296,7 +296,7 @@ function umbrella_3(str1, str2, str3, color1) {
 	pop();
 }
 
-function umbrella_4(str1, str2, str3, str4, color3) {
+function umbrella_4(str1, str2, str3, str4, color2) {
 	stroke(20);
 	strokeWeight(8);
 	strokeCap(SQUARE);
@@ -325,7 +325,7 @@ function umbrella_4(str1, str2, str3, str4, color3) {
 	pop()
 }
 
-function umbrella_5(str1, str2, str3, str4, str5, color2) {
+function umbrella_5(str1, str2, str3, str4, str5, color3) {
 	stroke(20);
 	strokeWeight(8);
 	strokeCap(SQUARE);
@@ -427,7 +427,7 @@ function myMountain(mountainNoise = 0.001) {
 		for (let x = 0; x < width; x += 2) {
 			noStroke();
 			fill(mainHue, i/25, 100);
-			rect(x, height - 1000 * noise(0.2*i, mountainNoise*x+t) * sin(i/4), 2, 400, 20);
+			rect(x, height - height * noise(0.2*i, mountainNoise*x+t) * sin(i/4), 2, 400, 20);
 		}
 	}
 }
