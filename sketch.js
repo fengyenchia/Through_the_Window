@@ -58,7 +58,8 @@ let bgRectHeight;
 let mountainNoise = 0.001;
 
 async function setup() {
-	createCanvas(800, 1000);
+	createCanvas(864, 1080);
+	pixelDensity(1);
 	colorMode(HSB, 360, 100, 100, 255);
 
 	let colorList = [0, 206, 342, 50];
@@ -78,12 +79,12 @@ async function setup() {
 	peopleStyle_5 = ceil(random(2));
 	peopleStyle_4 = ceil(random(2));
 
-	umbrella3_posX = random(350, 450);
-	umbrella3_posY = random(550, 700);
-	umbrella4_posX = random(550, 700);
-	umbrella4_posY = random(550, 700);
-	umbrella5_posX = random(100, 250);
-	umbrella5_posY = random(550, 700);
+	umbrella3_posX = random(380, 450);
+	umbrella3_posY = random(580, 700);
+	umbrella4_posX = random(580, 700);
+	umbrella4_posY = random(580, 700);
+	umbrella5_posX = random(120, 250);
+	umbrella5_posY = random(580, 700);
 
     // 星星
     for(let i=0; i<100; i++){
@@ -98,7 +99,7 @@ async function setup() {
 	// 月亮 width * 0.8, height * 0.18(原本)
 	moonX = random(width * 0.2, width * 0.8);
 	moonY = random(height * 0.16, height * 0.2);
-	moonPos = random(0, -PI);
+	moonPos = random(-PI*1/8, -PI*7/8);
 
 	// 山
 	mountainNoise = random(0.001, 0.003);
@@ -441,12 +442,15 @@ function myFrame() {
 	drawingContext.shadowColor = color(20);
 	drawingContext.shadowBlur = 20;
 	strokeWeight(50);
-	rect(40, 40, 720, 460);
-	rect(40, 500, 720, 460);
+	let padding = 40;
+	rect(padding, padding, width - padding * 2, height/2-padding);
+	rect(padding, height/2, width - padding * 2, height/2-padding);
+	// rect(40, 40, 720, 460);
+	// rect(40, 500, 720, 460);
 	
 	drawingContext.shadowBlur = 20;
 	strokeWeight(80);
-	rect(0, 0, 800, 1000);
+	rect(0, 0, width, height);
 
 	// 積雪
 	drawingContext.shadowColor = color(255);
@@ -454,19 +458,19 @@ function myFrame() {
 	fill(92);
 	noStroke();
 	beginShape()
-	vertex(width - 65, 475);
-	vertex(65, 475);
-	for (let x = 65; x <= width - 65; x+=5) {
-			let y = 460 - 45 * noise(x/20)+sin(frameCount/15)*10;
+	vertex(width - 65, height/2-25);
+	vertex(65, height/2-25);
+	for (let x = 65; x <= width - 60; x+=5) {
+			let y = (height/2-40) - 45 * noise(x/20)+sin(frameCount/15)*10;
 			vertex(x, y);
 	}
 	endShape(CLOSE);
 	
 	beginShape()
-	vertex(width - 65, 935);
-	vertex(65, 935);
-	for (let x = 65; x <= width - 65; x+=5) {
-			let y = 925 - 40 * noise(x/200)+sin(frameCount/20)*10;
+	vertex(width - 65, height-65);
+	vertex(65, height-65);
+	for (let x = 65; x <= width - 60; x+=5) {
+			let y = (height-75) - 40 * noise(x/200)+sin(frameCount/20)*10;
 			vertex(x, y);
 	}
 	endShape(CLOSE);	
