@@ -111,7 +111,7 @@ async function setup() {
 function draw() {
 	background(255);
 	// 背景
-	bgRectHeight = map(sin(frameCount/40), 0,1, 9.8, 10.4);
+	bgRectHeight = lerp(9.5, 10.5, sin(frameCount/360));
 	myBackground(color(227, 41, 45), color(223, 54, 5), bgRectHeight)
     
 	// 星星
@@ -253,7 +253,7 @@ function myMoon(pos) {
 
     let radius = height * 0.3;      // 圓半徑（軌道大小）
     let arcAngle = PI*2;           // 擺動範圍（越大越左右移動）
-    let speed = -millis() * 0.00002;   // 速度
+    let speed = -millis() * 0.000002;   // 速度
     let angle = speed* arcAngle;
 
 	let x = cos(pos + angle) * radius;
@@ -365,12 +365,16 @@ function people(posX, posY, peopleStyle, peopleScale = 15) {
 	let circlePosition = 2.8 + (sin(frameCount/10)+1)*0.4;
 	if (peopleStyle == 1) {
 		circle(posX + circlePosition, posY - 3, 6);
-		let r = random(19, 20);
-		quad(posX + 1, posY, posX + 5, posY, posX + random(8,9), posY + r, posX - random(1,2), posY + r);
+		let r1 = lerp(19, 20, sin(frameCount/60));
+		let r2 = lerp(8, 9, sin(frameCount/60));
+		let r3 = lerp(1, 2, sin(frameCount/60));
+
+		quad(posX + 1, posY, posX + 5, posY, posX + r2, posY + r1, posX - r3, posY + r1);
 		rect(posX + 1, posY + 19 - 2, 2, 14, 5);
 		rect(posX + 4, posY + 19 - 2, 2, 14, 5);
-		let t = random(0, 1);
-		quad(posX, posY + 0.2, posX + 1, posY + 0.2, posX + 1.5, posY + 8 + t, posX - 4, posY + 12 + t);
+		
+		let r4 = lerp(0, 1, sin(frameCount/60));
+		quad(posX, posY + 0.2, posX + 1, posY + 0.2, posX + 1.5, posY + 8 + r4, posX - 4, posY + 12 + r4);
 		quad(posX + 5, posY + 0.2, posX + 5 + 0.8, posY + 0.2, posX + 5 + 5.5, posY + 12, posX + 5, posY + 8);
 		push()
 		rotate(sin(frameCount/20)*0.1)
@@ -378,14 +382,14 @@ function people(posX, posY, peopleStyle, peopleScale = 15) {
 		pop()
 	} else if(peopleStyle == 2) {
 		circle(posX + circlePosition, posY - 3, 6);
-		let r = random(14, 14.2);
-		rect(posX + 0.5, posY, 7, r, 10);
+		let r1 = lerp(14, 14.2, sin(frameCount/60));
+		rect(posX + 0.5, posY, 7, r1, 10);
 		rect(posX + 1, posY + 12, 2, 14);
 		rect(posX + 4, posY + 12, 2, 14);
 		strokeWeight(1.5);
-		let t = random(11, 12);
-		quad(posX + 1.5, posY + 1, posX + 3, posY + 2.5, posX - 2.5, posY + 1 + t, posX - 4, posY - 0.5 + t);
-		quad(posX + 6.5, posY + 1, posX + 5, posY + 2.5, posX + 9, posY + 1 + t, posX + 11.5, posY + 0.5 + t);
+		let r2 = lerp(11, 12, sin(frameCount/60));
+		quad(posX + 1.5, posY + 1, posX + 3, posY + 2.5, posX - 2.5, posY + 1 + r2, posX - 4, posY - 0.5 + r2);
+		quad(posX + 6.5, posY + 1, posX + 5, posY + 2.5, posX + 9, posY + 1 + r2, posX + 11.5, posY + 0.5 + r2);
 		push()
 		rotate(cos(frameCount/20)*0.1)
 		mySki(posX, posY + 28);
@@ -424,10 +428,10 @@ function myMountain(mountainNoise = 0.001) {
 	
 	for (let i = 800; i > 0; i -=10) {
 		let t = frameCount * 0.01; // 控制速度
-		for (let x = 0; x < width; x += 2) {
+		for (let x = 0; x < width; x += 1) {
 			noStroke();
 			fill(mainHue, i/25, 100);
-			rect(x, height - height * noise(0.2*i, mountainNoise*x+t) * sin(i/4), 2, 400, 20);
+			rect(x, height - height * noise(0.2*i, mountainNoise*x+t) * sin(i/4), 1, 400, 20);
 		}
 	}
 }
@@ -445,8 +449,6 @@ function myFrame() {
 	let padding = 40;
 	rect(padding, padding, width - padding * 2, height/2-padding);
 	rect(padding, height/2, width - padding * 2, height/2-padding);
-	// rect(40, 40, 720, 460);
-	// rect(40, 500, 720, 460);
 	
 	drawingContext.shadowBlur = 20;
 	strokeWeight(80);
@@ -461,7 +463,7 @@ function myFrame() {
 	vertex(width - 65, height/2-25);
 	vertex(65, height/2-25);
 	for (let x = 65; x <= width - 60; x+=5) {
-			let y = (height/2-40) - 45 * noise(x/20)+sin(frameCount/15)*10;
+			let y = (height/2-40) - 45 * noise(x/20)+sin(frameCount/35)*10;
 			vertex(x, y);
 	}
 	endShape(CLOSE);
@@ -470,7 +472,7 @@ function myFrame() {
 	vertex(width - 65, height-65);
 	vertex(65, height-65);
 	for (let x = 65; x <= width - 60; x+=5) {
-			let y = (height-75) - 40 * noise(x/200)+sin(frameCount/20)*10;
+			let y = (height-75) - 40 * noise(x/200)+sin(frameCount/40)*10;
 			vertex(x, y);
 	}
 	endShape(CLOSE);	
